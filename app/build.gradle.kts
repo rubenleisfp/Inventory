@@ -41,10 +41,18 @@ android {
 }
 
 dependencies {
-    // Excluir las anotaciones duplicadas
+    // Configuración para manejar el conflicto de anotaciones
     configurations.all {
+        // Excluir la versión antigua de las anotaciones
         exclude(group = "com.intellij", module = "annotations")
+        // Forzar la versión definida en libs.versions.toml
+        resolutionStrategy {
+            force(libs.jetbrains.annotations)
+        }
     }
+
+    // Usar la versión definida en libs.versions.toml
+    implementation(libs.jetbrains.annotations)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -56,15 +64,12 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.navigation)
+    
     //Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx) {
-        exclude(group = "com.intellij", module = "annotations")
-    }
-    ksp(libs.androidx.room.compiler) {
-        exclude(group = "com.intellij", module = "annotations")
-    }
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
